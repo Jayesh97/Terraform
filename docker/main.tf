@@ -1,16 +1,15 @@
-#Download the latest Ghost image
-
-resource "docker_image" "image_id" {
-  name = "ghost:latest"
+# Download ghost
+module "image" {
+ source = "./image"
+ image = "${var.image}"
 }
 
-# Start the Container
 
-resource "docker_container" "container_id" {
-  name  = "blog"
-  image = "${docker_image.image_id.latest}"
-  ports {
-    internal = "2368"
-    external = "80"
-  }
+# Start the Container
+module "container" {
+ source = "./container"
+ image = "${module.image.image_out}"
+ name = "${var.name}"
+ iport = "${var.iport}"
+ eport = "${var.eport}"
 }
